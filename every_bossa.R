@@ -45,7 +45,7 @@ exception <- c("SILVAIR-REGS","GRUPAAZOTY","MDIENERGIA","MILLENNIUM","INVESTORMS
                "SANTANDER", "STALPROFI", "STARHEDGE", "UNICREDIT", "VENTUREIN", "WIRTUALNA",
                "IDMSA")
 # we dont want these because these are indexes
-without <- c("SANPL2", "WIGDIV","WIG30","SWIG80", "MWIG40","WIG30TR", "WIG20TR", "WIG-CEE",
+without <- c("WIGDIV","WIG30","SWIG80", "MWIG40","WIG30TR", "WIG20TR", "WIG-CEE",
              "RESPECT")
 
 any(!(without %in% tickery.gpw$V1)) #looking if anything is included 

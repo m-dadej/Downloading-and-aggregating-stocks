@@ -41,7 +41,7 @@ wyjątki <- c("SILVAIR-REGS","GRUPAAZOTY","MDIENERGIA","MILLENNIUM","INVESTORMS"
              "SANTANDER", "STALPROFI", "STARHEDGE", "UNICREDIT", "VENTUREIN", "WIRTUALNA",
              "IDMSA")
 
-bez <- c("SANPL2", "WIGDIV","WIG30","SWIG80", "MWIG40","WIG30TR", "WIG20TR", "WIG-CEE",
+bez <- c("WIGDIV","WIG30","SWIG80", "MWIG40","WIG30TR", "WIG20TR", "WIG-CEE",
          "RESPECT")
 
 any(!(bez %in% tickery.gpw$V1)) 
