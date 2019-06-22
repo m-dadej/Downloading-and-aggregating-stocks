@@ -64,7 +64,8 @@ tickery <- tickery.gpw[-bez.index]%>%
   append(exception)%>%
   append(tickery.nc)%>%
   unique(tickery.gpw)%>%
-  as.matrix(ncol = 1, byrow = TRUE)
+  as.matrix(ncol = 1, byrow = TRUE)%>%
+  unique()
 
 # We have every name 
 # script below goes in analogous way to the one before 
@@ -90,8 +91,8 @@ download.file(paste(url1,
                     sep = ""),
               temp.gpw)
 
-total <- read.csv(unzip(temp.gpw, paste(ticker, ".mst", sep = "")))
-total <- read.csv(unzip(temp.nc, paste(ticker, ".mst", sep = "")))
+total <- read.csv(unzip(temp.gpw, paste(ticker, ".mst", sep = ""), exdir = "exit_directory"))
+total <- read.csv(unzip(temp.nc, paste(ticker, ".mst", sep = ""), exdir = "exit_directory"))
 
 total$X.DTYYYYMMDD. <- ymd(total$X.DTYYYYMMDD.)              
 total <- select(total, Date = X.DTYYYYMMDD., Close = X.CLOSE.) 
@@ -101,10 +102,10 @@ progress.bar <- winProgressBar("Unzipping files - Done in %", "0% Done", 0, 1, 0
 
 for(i in 2:nrow(tickery)) try({
   
-  if(paste(tickery[i],".mst", sep = "") %in% unzip(temp.gpw, list = TRUE)$Name){
-    stock <- read.csv(unzip(temp.gpw, paste(tickery[i], ".mst", sep = "")))
+  if(paste(tickery[i],".mst", sep = "") %in% unzip(temp.gpw, list = TRUE,)$Name){
+    stock <- read.csv(unzip(temp.gpw, paste(tickery[i], ".mst", sep = ""), exdir = "exit_directory"))
   } else {
-    stock <- read.csv(unzip(temp.nc, paste(tickery[i], ".mst", sep = "")))
+    stock <- read.csv(unzip(temp.nc, paste(tickery[i], ".mst", sep = ""), exdir = "exit_directory"))
   }
   
   stock$X.DTYYYYMMDD. <- ymd(stock$X.DTYYYYMMDD.)                
@@ -123,3 +124,4 @@ close(progress.bar)
 proc.time()-ptm
 
 tail(total)
+
