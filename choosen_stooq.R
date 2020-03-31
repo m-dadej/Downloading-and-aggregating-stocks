@@ -1,9 +1,5 @@
 library(lubridate)
 library(dplyr)
-library(readtext)
-library(stringr)
-library(readr)
-library(readxl)
 
 ######## Downloading many stocks from a list.##########
 
@@ -46,10 +42,10 @@ for(i in 2:nrow(tickery)){
   total<-merge(total,stock,by="Date",all=TRUE)    
   
   percentage <- i / nrow(tickery)
-  setWinProgressBar(progress.bar, percentage, "Done in %",
+  setWinProgressBar(progress.bar, percentage, "Downloading stocks - Done in %",
                     sprintf("%i%% Done", round(100 * percentage))) 
   
 }
 close(progress.bar)
-
+rm(progress.bar, stock, tickery, i, percentage, url.caly, url1, url2, url3)
 

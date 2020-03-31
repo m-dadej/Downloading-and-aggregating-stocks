@@ -1,19 +1,16 @@
 library(lubridate)
-library(dplyr)
-library(readtext)
-library(stringr)
-library(readr)
-library(readxl)
+library(tidyverse)
 
 ######## Downloading many choosen stocks from bossa.pl #############
+# In most cases, better alternative is to use script choosen_stooq, because this script takes longer due to the need of 
+# downloading full zip file of stocks and unpacking it anyway. It might be better if you hit the limit on stooq.pl
+# this script will make a folder in your working directory called "exit_directory" where stock data will be stored
 
 ptm <- proc.time() # timer begins now
 tickery <- matrix(c("PKOBP", "MILLENNIUM", "SANPL", "ROPCZYCE", "GINOROSSI", "ELEMENTAL",
-                    "ASSECOPOL", "AUTOPARTN", "WADEX", "RAFAKO", "PGNIG", 
-                    "MERLINGRP", "FARM51", "ATCCARGO", "MEXPOLSKA", "XTPL",
-                    "DEKTRA"), ncol=1, byrow=TRUE)
+                    "DEKTRA", "GETIN", "XTB", "MEXPOLSKA"), ncol=1, byrow=TRUE)
 
-ticker <- tickery[1]      # list of the shares provided just like before (example)
+ticker <- tickery[1]      # above matrix consists of choosen stocks to be downloaded
 urlnc2 <- "newconnect"       
 urlgpw2 <- "ciagle"
 url1 <- "https://info.bossa.pl/pub/"
@@ -23,10 +20,10 @@ urlgpw <- "/mstock/mstcgl.zip"
 temp.nc <- tempfile()                 # making a temp file for newconnect
 temp.gpw <- tempfile()                # and for GPW
 
-download.file(paste(url1,
+download.file(paste(url1,             # putting both into temp.file
                     urlnc2, 
                     urlnc,
-                    sep = ""),        # putting into temp.file
+                    sep = ""),        
               temp.nc)
 download.file(paste(url1,
                     urlgpw2, 
@@ -35,8 +32,11 @@ download.file(paste(url1,
               temp.gpw)
 
 # One of two commands below will give error. Its due to the first share being only from NC or GPW
-total <- read.csv(unzip(temp.gpw, paste(ticker, ".mst", sep = "")))
-total <- read.csv(unzip(temp.nc, paste(ticker, ".mst", sep = "")))
+
+options(show.error.messages = FALSE)
+suppressWarnings(try(total <- read.csv(unzip(temp.gpw, paste(ticker, ".mst", sep = ""), exdir = "exit_directory"))))
+suppressWarnings(try(total <- read.csv(unzip(temp.nc, paste(ticker, ".mst", sep = ""), exdir = "exit_directory"))))
+options(show.error.messages = TRUE)
 
 total$X.DTYYYYMMDD. <- ymd(total$X.DTYYYYMMDD.)                 # making YYYYMMDD format
 total <- select(total, Date = X.DTYYYYMMDD., Close = X.CLOSE.)  # This time we only take 1 variable from every share
@@ -48,9 +48,9 @@ for(i in 2:nrow(tickery)) try({
   
   # This time we have to choose good market.
   if(paste(tickery[i],".mst", sep = "") %in% unzip(temp.gpw, list = TRUE)$Name){
-    stock <- read.csv(unzip(temp.gpw, paste(tickery[i], ".mst", sep = "")))
+    stock <- read.csv(unzip(temp.gpw, paste(tickery[i], ".mst", sep = ""), exdir = "exit_directory"))
   } else {
-    stock <- read.csv(unzip(temp.nc, paste(tickery[i], ".mst", sep = "")))
+    stock <- read.csv(unzip(temp.nc, paste(tickery[i], ".mst", sep = ""), exdir = "exit_directory"))
   }
   
   
@@ -68,5 +68,5 @@ unlink(temp.nc)
 unlink(temp.gpw)
 close(progress.bar)
 proc.time()-ptm
+rm(progress.bar, stock, tickery, i, percentage, ptm, temp.gpw, temp.nc, ticker, url1, urlgpw, urlgpw2, urlnc, urlnc2)
 
-tail(total)
