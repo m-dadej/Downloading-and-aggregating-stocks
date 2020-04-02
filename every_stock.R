@@ -91,3 +91,4 @@ rm(stock, tickery, webs, i, percentage, progress.bar, ptm, stock.names, temp.gpw
 # To check which stocks are not present in bossa.pl file, load whole script without last function rm(...) and run:
 # str_split_fixed(tickery,n = 2, ".mst")[which(!(str_split_fixed(tickery,n = 2, ".mst")[,1] %in% colnames(total))),1]
 
+# 
