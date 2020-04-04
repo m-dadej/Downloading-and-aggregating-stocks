@@ -2,7 +2,7 @@ Downloading and aggregating stocks from Warsaw Stock Exchange
 ================
 Mateusz Dadej
 
-This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW/WSE). In near future it might be part of quantitative finance library. Sources of the included functions, as of now, are [info.bossa.pl](https://info.bossa.pl/notowania/metastock/), website of polish brokerage house and [stooq.pl](https://stooq.com/), financial portal.
+This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW/WSE). In near future it might be part of quantitative finance library. Sources of the included functions, as of now, are [info.bossa.pl](https://info.bossa.pl/notowania/metastock/), website of polish brokerage house and [stooq.pl](https://stooq.com/), financial portal. Note, that using data from both of these sources without disclaiming source is illegal and unethical.
 
 #### Easiest way to download dataset of up to date historical share prices for every stock on GPW
 
@@ -50,3 +50,5 @@ Arguments:
 
 * `source` - One of c("stooq.pl", "bossa"). Specify source of data. For less stocks it is faster to use "stooq.pl"
 
+--------------------------------------------------------------------------------------------------------------------------------------
+Note, that using data from both of these sources without disclaiming it in final work is illegal.
