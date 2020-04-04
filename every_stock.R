@@ -42,11 +42,13 @@ download.file(paste(url1,
                     sep = ""),
               temp.gpw)
 
+temp_exit_dir <- tempdir()
+
 # one of those will give error. Thas is because its hard to know if the first stock is from NC or main platform
 # so the script tries to read from both files.
 options(show.error.messages = FALSE)
-suppressWarnings(try(total <- read.csv(unzip(temp.gpw, paste(ticker), exdir = "exit_directory_stocks"))))
-suppressWarnings(try(total <- read.csv(unzip(temp.nc, paste(ticker), exdir = "exit_directory_stocks"))))
+suppressWarnings(try(total <- read.csv(unzip(temp.gpw, paste(ticker), exdir = temp_exit_dir))))
+suppressWarnings(try(total <- read.csv(unzip(temp.nc, paste(ticker), exdir = temp_exit_dir))))
 options(show.error.messages = TRUE)
 
 total$X.DTYYYYMMDD. <- lubridate::ymd(total$X.DTYYYYMMDD.)              
@@ -61,9 +63,9 @@ for(i in 2:nrow(tickery)) try({
   
   # suppressWarnings() is used because some stocks are not available in bossa.pl file. The file lacks several stocks
   if(paste(tickery[i]) %in% unzip(temp.gpw, list = TRUE)$Name){
-    suppressWarnings(stock <- read.csv(unzip(temp.gpw, paste(tickery[i]), exdir = "exit_directory_stocks")))
+    suppressWarnings(stock <- read.csv(unzip(temp.gpw, paste(tickery[i]), exdir = temp_exit_dir)))
   } else {
-   suppressWarnings( stock <- read.csv(unzip(temp.nc, paste(tickery[i]), exdir = "exit_directory_stocks")))
+   suppressWarnings( stock <- read.csv(unzip(temp.nc, paste(tickery[i]), exdir = temp_exit_dir)))
   }
   
   stock$X.DTYYYYMMDD. <- lubridate::ymd(stock$X.DTYYYYMMDD.)                
@@ -80,15 +82,11 @@ options(show.error.messages = TRUE)
 stock.names <- stringr::str_split_fixed(colnames(total),n = 2, ".mst")[,1]
 colnames(total) <- stock.names
 
-unlink(temp.nc)
-unlink(temp.gpw)
+unlink(c(temp.nc, temp.gpw, temp_exit_dir))
 
-close(progress.bar)
-proc.time()-ptm
-rm(stock, tickery, webs, i, percentage, progress.bar, ptm, stock.names, temp.gpw, temp.nc, ticker, url1, urlgpw, urlgpw2,
-   urlnc, urlnc2, list.of.packages, new.packages)
+close(progress.bar) 
+proc.time()-ptm # timer
+rm(list = ls()[-which(ls() == "total")]) # remove everything beside "total"
 
 # To check which stocks are not present in bossa.pl file, load whole script without last function rm(...) and run:
 # str_split_fixed(tickery,n = 2, ".mst")[which(!(str_split_fixed(tickery,n = 2, ".mst")[,1] %in% colnames(total))),1]
-
-# 
