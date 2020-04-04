@@ -23,14 +23,14 @@ write.csv(total, file = "total.csv")
 
 This function is similar to [quantmod](https://cran.r-project.org/web/packages/quantmod/quantmod.pdf) getSymbol(). It returns historical data of prices or other financial metrics for a given vector of tickers, from a given timeframe.
 
-To have that function, firt you need to run following script:
+To use that function, first you need to run following script from herein repository:
 ```R
-
+source("https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getStock.R")
 ```
-Then, the function will be in your environment. Here is an example how to use it:
+Then, the function will show in your environment. Here is an example how to use it:
 
 ```R
-getStock(tickers, 
+getStock(tickers = c("ccc", "pko", "dkr"), 
          ohlcv = "Close", 
          from = "1991-04-16", 
          to = Sys.Date(), 
