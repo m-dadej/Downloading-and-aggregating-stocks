@@ -4,7 +4,6 @@ Mateusz Dadej
 
 This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW / WSE). In near future it might be part of library for quantitative finance. Sources of the included functions, as of now, are [info.bossa.pl](https://info.bossa.pl/notowania/metastock/), website of polish brokerage house and [stooq.pl](https://stooq.com/), financial portal. Functions currently allows to download every stock from WSE (as of 18th April 2020, a dataset of 6,816 x 815 dimension, i.e. 814 stocks with prices for 6,816 trading sessions) and some choosen stocks similar to `getSymbols()` from [quantmod](https://cran.r-project.org/web/packages/quantmod/quantmod.pdf) pacakge.
 
-\
 
 #### everyWSE()
 
@@ -29,7 +28,7 @@ to import this function download it from herein repository or run following scri
 ```R
 source("https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/everyWSE.R")
 ```
-\
+
 
 #### getWSE() 
 
