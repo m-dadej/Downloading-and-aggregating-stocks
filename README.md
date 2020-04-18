@@ -2,7 +2,11 @@ Downloading and aggregating stocks from Warsaw Stock Exchange
 ================
 Mateusz Dadej
 
+<<<<<<< HEAD
 This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW / WSE). In near future it might be part of library for quantitative finance. Sources of the included functions, as of now, are [info.bossa.pl](https://info.bossa.pl/notowania/metastock/), website of polish brokerage house and [stooq.pl](https://stooq.com/), financial portal. Functions currently allows to download every stock from WSE (as of 18th April 2020, a dataset of 6,816 x 815 dimension, i.e. 814 stocks with prices for 6,816 trading sessions) and some choosen stocks similar to `getSymbols()` from [quantmod](https://cran.r-project.org/web/packages/quantmod/quantmod.pdf) pacakge.
+=======
+This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW/WSE). In near future it might be part of quantitative finance library. Sources of the included functions, as of now, are [info.bossa.pl](https://info.bossa.pl/notowania/metastock/), website of polish brokerage house and [stooq.pl](https://stooq.com/), financial portal. Note, that using data from both of these sources without disclaiming source is illegal and unethical.
+>>>>>>> f4ebb22a6c3181a433e4f3ddd1b9b3594252f3ce
 
 \
 
@@ -21,6 +25,7 @@ Arguments:
 
 * `ohlcv` - One of `c("Open", "High", "Low", "Close", "Volume")`. Specify which part of the daily price or volume to donwload. Default to "Close"
 
+<<<<<<< HEAD
 * `info` - Boolean to choose if additional `data.frame` object to return. Downloaded data.frame have number of columns equal to the price data, for each stock indicate its IPO date, which market it is listed on and stock ticker.
 If `info = TRUE` then returns a `list` object with 2 data frames described above.
 
@@ -37,6 +42,16 @@ Returns historical data of prices or other financial metrics for a given vector 
 
 ```R
 getWSE(tickers, 
+=======
+To use that function, first you need to run following script from herein repository:
+```R
+source("https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getStock.R")
+```
+Then, the function will show in your environment. Here is an example how to use it:
+
+```R
+getStock(tickers = c("ccc", "pko", "dkr"), 
+>>>>>>> f4ebb22a6c3181a433e4f3ddd1b9b3594252f3ce
          ohlcv = "Close", 
          from = "1991-04-16", 
          to = Sys.Date(), 
@@ -61,5 +76,10 @@ To download that function, firt you need to run following script:
 source("https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getWSE.R")
 ```
 
+<<<<<<< HEAD
 -----------------------------------------------------------------------------------------------------------------
 Note, that using data from both of these sources without disclaiming it in final work is illegal.
+=======
+--------------------------------------------------------------------------------------------------------------------------------------
+Note, that using data from both of these sources without disclaiming it in final work is illegal.
+>>>>>>> f4ebb22a6c3181a433e4f3ddd1b9b3594252f3ce
