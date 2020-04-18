@@ -194,9 +194,9 @@ getWSE <- function(tickers,
 
 #example:
 
-stock_data <- getWSE(tickers = c("DROP","DEKTRA", "PEKAO", "PKOBP", "GETIN", "DROP", "MOSTALZAB"), 
-                        ohlcv = "Close",
-                       from = "1999-01-01",
-                       to = "2015-01-01",
-                      fin_metr = "pb",
-                       source = "bossa")
+#stock_data <- getWSE(tickers = c("DROP","DEKTRA", "PEKAO", "PKOBP", "GETIN", "DROP", "MOSTALZAB"), 
+#                        ohlcv = "Close",
+#                       from = "1999-01-01",
+#                       to = "2015-01-01",
+#                      fin_metr = "pb",
+#                       source = "bossa")
