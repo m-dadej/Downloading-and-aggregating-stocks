@@ -368,36 +368,47 @@ summary {
 <div id="downloading-and-aggregating-stocks-from-warsaw-stock-exchange" class="section level1">
 <h1>Downloading and aggregating stocks from Warsaw Stock Exchange</h1>
 <p>Mateusz Dadej</p>
-<p>This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW/WSE). In near future it might be part of quantitative finance library. Sources of the included functions, as of now, are <a href="https://info.bossa.pl/notowania/metastock/">info.bossa.pl</a>, website of polish brokerage house and <a href="https://stooq.com/">stooq.pl</a>, financial portal.</p>
-<div id="easiest-way-to-download-dataset-of-up-to-date-historical-share-prices-for-every-stock-on-gpw" class="section level4">
-<h4>Easiest way to download dataset of up to date historical share prices for every stock on GPW</h4>
-<p>Following script provide an easy way to download recent (last session) polish stock data. It allows to download several choosen stock data as well as to download a single dataset containing historical share prices of every company listed on NewConnect and main platform of Warsaw Stock Exchange (as of 1st April 2020, a dataset of 6805 x 783 dimension). One need only Rstudio with R itself and a more or less stable internet connection.</p>
-<p>Run following part of code in R:</p>
-<pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/every_stock.R&quot;)</code></pre>
-<p>There ought ot be a few progress bars and in total the script will take aproximatelly 250 sec with good internet connection and without installing libraries. Essentially, the script downloads .zip packages from <a href="https://info.bossa.pl/notowania/metastock/">info.bossa.pl</a> with historical data and unzips them, that is why it takes some time.</p>
-<p>If you want to export it to csv file, run following command in R:</p>
-<pre class="r"><code>write.csv(total, file = &quot;total.csv&quot;)</code></pre>
+<p>This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW / WSE). In near future it might be part of library for quantitative finance. Sources of the included functions, as of now, are <a href="https://info.bossa.pl/notowania/metastock/">info.bossa.pl</a>, website of polish brokerage house and <a href="https://stooq.com/">stooq.pl</a>, financial portal. Functions currently allows to download every stock from WSE (as of 18th April 2020, a dataset of 6,816 x 815 dimension, i.e. 814 stocks with prices for 6,816 trading sessions) and some choosen stocks similar to <code>getSymbols()</code> from <a href="https://cran.r-project.org/web/packages/quantmod/quantmod.pdf">quantmod</a> pacakge.</p>
+<p><br />
+</p>
+<div id="everywse" class="section level4">
+<h4>everyWSE()</h4>
+<p>Returns a <code>data.frame</code> object with downloaded daily prices of every stock listed on Warsaw Stock Exchange from main market or alternative one - newconnect. Data is currently downloaded from info.bossa.pl.</p>
+<pre class="r"><code>everyWSE(market = &quot;both&quot;,
+         ohlcv = &quot;Close&quot;,
+         info = FALSE)</code></pre>
+<p>Arguments:</p>
+<ul>
+<li><p><code>market</code> - One of <code>c(&quot;both&quot;, &quot;gpw&quot;, &quot;nc&quot;)</code>. Specify stocks from which market to download. Default to “both”.</p></li>
+<li><p><code>ohlcv</code> - One of <code>c(&quot;Open&quot;, &quot;High&quot;, &quot;Low&quot;, &quot;Close&quot;, &quot;Volume&quot;)</code>. Specify which part of the daily price or volume to donwload. Default to “Close”</p></li>
+<li><p><code>info</code> - boolean to choose if additional <code>data.frame</code> object to return. Downloaded data.frame have number of columns equal to the price data, for each stock indicate its IPO date, which market it is listed on and stock ticker. If <code>info = TRUE</code> then returns a <code>list</code> object with 2 data frames described above.</p></li>
+</ul>
+<p>to import this function download it from herein repository or run following script</p>
+<pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/everyWSE.R&quot;)</code></pre>
+<p><br />
+</p>
 </div>
-<div id="getstock" class="section level4">
-<h4>getStock()</h4>
-<p>This function is similar to <a href="https://cran.r-project.org/web/packages/quantmod/quantmod.pdf">quantmod</a> getSymbol(). It returns historical data of prices or other financial metrics for a given vector of tickers, from a given timeframe.</p>
-<p>To have that function, firt you need to run following script:</p>
-<pre class="r"><code></code></pre>
-<p>Then, the function will be in your environment. Here is an example how to use it:</p>
-<pre class="r"><code>getStock(tickers, 
+<div id="getwse" class="section level4">
+<h4>getWSE()</h4>
+<p>Returns historical data of prices or other financial metrics for a given vector of tickers, from a given timeframe. This function is similar to <a href="https://cran.r-project.org/web/packages/quantmod/quantmod.pdf">quantmod</a> getSymbol().</p>
+<pre class="r"><code>getWSE(tickers, 
          ohlcv = &quot;Close&quot;, 
          from = &quot;1991-04-16&quot;, 
          to = Sys.Date(), 
          fin_metr = &quot;p&quot;,         
          source = &quot;stooq.pl&quot;)</code></pre>
-<p>The arguments define following aspects:</p>
+<p>Arguments:</p>
 <ul>
-<li><p><code>tickers</code> - vector or single character of tickers of desired stock, e.g. c(“ccc”, “pko”, “dkr”). It is important that format of these tickers is different for every source argument. If source = “stooq.pl”, then the proper way to specify tickers is an actual ticker in lowercase e.g, “cdr” for CD Project Red, “pko” for PKO Bank. If source = “bossa”, then it is necessery to use capital letters with shortened version of name (technically not a ticker). E.g., “CDPROJEKT” for CD Project Red, “PKOBP” for PKO Bank.</p></li>
-<li><p><code>ohlcv</code> - Argument specyfing which part of the session should be returned as values. Available are c(“Open”, “High”, “Low”, “Close”, “Volume”). It is possible to choose only one.</p></li>
+<li><p><code>tickers</code> - vector or single character of tickers of desired stock, e.g. <code>c(&quot;ccc&quot;, &quot;pko&quot;, &quot;dkr&quot;)</code>. It is important that format of these tickers is different for every source argument. If source = “stooq.pl”, then the proper way to specify tickers is an actual ticker in lowercase e.g, “cdr” for CD Project Red, “pko” for PKO Bank. If source = “bossa”, then it is necessery to use capital letters with shortened version of name (technically not a ticker). E.g., “CDPROJEKT” for CD Project Red, “PKOBP” for PKO Bank.</p></li>
+<li><p><code>ohlcv</code> - Argument specyfing which part of the session should be returned as values. Available are <code>c(&quot;Open&quot;, &quot;High&quot;, &quot;Low&quot;, &quot;Close&quot;, &quot;Volume&quot;)</code>. It is possible to choose only one.</p></li>
 <li><p><code>from</code> and <code>to</code> - Specify timeframe of retunred data frame. On default, from the beginning of GPW</p></li>
-<li><p><code>fin_metr</code> - Only for <code>source = &quot;stooq.pl&quot;</code>. One of the following, c(“p”, “mv”, “pb”, “pe”). Which are respectively, price, market capitalization (in PLN), price to earnings and to book value ratios.</p></li>
-<li><p><code>source</code> - One of c(“stooq.pl”, “bossa”). Specify source of data. For less stocks it is faster to use “stooq.pl”</p></li>
+<li><p><code>fin_metr</code> - Only for <code>source = &quot;stooq.pl&quot;</code>. One of the following, <code>c(&quot;p&quot;, &quot;mv&quot;, &quot;pb&quot;, &quot;pe&quot;)</code>. Which are respectively, price, market capitalization (in PLN), price to earnings and to book value ratios.</p></li>
+<li><p><code>source</code> - One of <code>c(&quot;stooq.pl&quot;, &quot;bossa&quot;)</code>. Specify source of data. For less stocks it is faster to use “stooq.pl”</p></li>
 </ul>
+<p>To download that function, firt you need to run following script:</p>
+<pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getWSE.R&quot;)</code></pre>
+<hr />
+<p>Note, that using data from both of these sources without disclaiming it in final work is illegal.</p>
 </div>
 </div>
 

@@ -28,7 +28,8 @@ urlnc <- "/mstock/mstncn.zip"
 urlgpw <- "/mstock/mstcgl.zip"
 
 temp.nc <- tempfile()                
-temp.gpw <- tempfile()               
+temp.gpw <- tempfile()        
+temp.gpw2 <- tempfile()
 
 # there are 2 files from bossa.pl. For NC and for main platform stocks.
 download.file(paste(url1,
@@ -41,6 +42,7 @@ download.file(paste(url1,
                     urlgpw,
                     sep = ""),
               temp.gpw)
+download.file("https://info.bossa.pl/pub/jednolity/f2/mstock/mstf2.zip", temp.gpw2)
 
 temp_exit_dir <- tempdir()
 
@@ -49,6 +51,7 @@ temp_exit_dir <- tempdir()
 options(show.error.messages = FALSE)
 suppressWarnings(try(total <- read.csv(unzip(temp.gpw, paste(ticker), exdir = temp_exit_dir))))
 suppressWarnings(try(total <- read.csv(unzip(temp.nc, paste(ticker), exdir = temp_exit_dir))))
+suppressWarnings(try(total <- read.csv(unzip(temp.gpw2, paste(ticker), exdir = temp_exit_dir))))
 options(show.error.messages = TRUE)
 
 total$X.DTYYYYMMDD. <- lubridate::ymd(total$X.DTYYYYMMDD.)              
@@ -64,6 +67,10 @@ for(i in 2:nrow(tickery)) try({
   # suppressWarnings() is used because some stocks are not available in bossa.pl file. The file lacks several stocks
   if(paste(tickery[i]) %in% unzip(temp.gpw, list = TRUE)$Name){
     suppressWarnings(stock <- read.csv(unzip(temp.gpw, paste(tickery[i]), exdir = temp_exit_dir)))
+  } else if(paste(tickery[i]) %in% unzip(temp.gpw2, list = TRUE)$Name) {
+    
+    suppressWarnings(stock <- read.csv(unzip(temp.gpw2, paste(tickery[i]), exdir = temp_exit_dir)))
+    
   } else {
    suppressWarnings( stock <- read.csv(unzip(temp.nc, paste(tickery[i]), exdir = temp_exit_dir)))
   }
@@ -89,4 +96,6 @@ proc.time()-ptm # timer
 rm(list = ls()[-which(ls() == "total")]) # remove everything beside "total"
 
 # To check which stocks are not present in bossa.pl file, load whole script without last function rm(...) and run:
-# str_split_fixed(tickery,n = 2, ".mst")[which(!(str_split_fixed(tickery,n = 2, ".mst")[,1] %in% colnames(total))),1]
+# stringr::str_split_fixed(tickery,n = 2, ".mst")[which(!(str_split_fixed(tickery,n = 2, ".mst")[,1] %in% colnames(total))),1]
+
+
