@@ -381,7 +381,7 @@ summary {
 <ul>
 <li><p><code>market</code> - One of <code>c(&quot;both&quot;, &quot;gpw&quot;, &quot;nc&quot;)</code>. Specify stocks from which market to download. Default to “both”.</p></li>
 <li><p><code>ohlcv</code> - One of <code>c(&quot;Open&quot;, &quot;High&quot;, &quot;Low&quot;, &quot;Close&quot;, &quot;Volume&quot;)</code>. Specify which part of the daily price or volume to donwload. Default to “Close”</p></li>
-<li><p><code>info</code> - boolean to choose if additional <code>data.frame</code> object to return. Downloaded data.frame have number of columns equal to the price data, for each stock indicate its IPO date, which market it is listed on and stock ticker. If <code>info = TRUE</code> then returns a <code>list</code> object with 2 data frames described above.</p></li>
+<li><p><code>info</code> - Boolean to choose if additional <code>data.frame</code> object to return. Downloaded data.frame have number of columns equal to the price data, for each stock indicate its IPO date, which market it is listed on and stock ticker. If <code>info = TRUE</code> then returns a <code>list</code> object with 2 data frames described above.</p></li>
 </ul>
 <p>to import this function download it from herein repository or run following script</p>
 <pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/everyWSE.R&quot;)</code></pre>
@@ -399,11 +399,16 @@ summary {
          source = &quot;stooq.pl&quot;)</code></pre>
 <p>Arguments:</p>
 <ul>
-<li><p><code>tickers</code> - vector or single character of tickers of desired stock, e.g. <code>c(&quot;ccc&quot;, &quot;pko&quot;, &quot;dkr&quot;)</code>. It is important that format of these tickers is different for every source argument. If source = “stooq.pl”, then the proper way to specify tickers is an actual ticker in lowercase e.g, “cdr” for CD Project Red, “pko” for PKO Bank. If source = “bossa”, then it is necessery to use capital letters with shortened version of name (technically not a ticker). E.g., “CDPROJEKT” for CD Project Red, “PKOBP” for PKO Bank.</p></li>
+<li><p><code>tickers</code> - Vector or single character of tickers of desired stock, e.g. <code>c(&quot;ccc&quot;, &quot;pko&quot;, &quot;dkr&quot;)</code>. It is important that format of these tickers is different for every source argument. If source = “stooq.pl”, then the proper way to specify tickers is an actual ticker in lowercase e.g, “cdr” for CD Project Red, “pko” for PKO Bank. If source = “bossa”, then it is necessery to use capital letters with shortened version of name (technically not a ticker). E.g., “CDPROJEKT” for CD Project Red, “PKOBP” for PKO Bank.</p></li>
 <li><p><code>ohlcv</code> - Argument specyfing which part of the session should be returned as values. Available are <code>c(&quot;Open&quot;, &quot;High&quot;, &quot;Low&quot;, &quot;Close&quot;, &quot;Volume&quot;)</code>. It is possible to choose only one.</p></li>
 <li><p><code>from</code> and <code>to</code> - Specify timeframe of retunred data frame. On default, from the beginning of GPW</p></li>
-<li><p><code>fin_metr</code> - Only for <code>source = &quot;stooq.pl&quot;</code>. One of the following, <code>c(&quot;p&quot;, &quot;mv&quot;, &quot;pb&quot;, &quot;pe&quot;)</code>. Which are respectively, price, market capitalization (in PLN), price to earnings and to book value ratios.</p></li>
 <li><p><code>source</code> - One of <code>c(&quot;stooq.pl&quot;, &quot;bossa&quot;)</code>. Specify source of data. For less stocks it is faster to use “stooq.pl”</p></li>
+</ul>
+<p>For <code>source = &quot;stooq.pl&quot;</code> there are some additional arguments:</p>
+<ul>
+<li><p><code>fin_metr</code> - Which are respectively, price, market capitalization (in PLN), price to earnings and to book value ratios. One of the following, <code>c(&quot;p&quot;, &quot;mv&quot;, &quot;pb&quot;, &quot;pe&quot;)</code>.</p></li>
+<li><p><code>freq</code> - Specifies frequency of time series. One of the following, <code>c(&quot;daily&quot; &quot;weekly&quot;, &quot;monthly&quot;, &quot;quarterly&quot;, &quot;yearly&quot;)</code>.</p></li>
+<li><p><code>corpo_action</code> - Adjust price to some of the given corporate actions. One of the following, <code>c(&quot;split&quot;, &quot;div&quot;, &quot;rights&quot;, &quot;denomination&quot;)</code>.</p></li>
 </ul>
 <p>To download that function, firt you need to run following script:</p>
 <pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getWSE.R&quot;)</code></pre>

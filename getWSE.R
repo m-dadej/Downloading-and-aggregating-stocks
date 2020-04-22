@@ -5,7 +5,9 @@ getWSE <- function(tickers,
                      from = "1991-04-16", 
                      to = Sys.Date(), 
                      fin_metr = "p",            # in case of source = "stooq.pl" - "p"
-                     source = "stooq.pl") {        # source of the data. "stooq.pl" or "bossa"
+                     source = "stooq.pl",       # source of the data. "stooq.pl" or "bossa"
+                     freq = "daily",
+                     corpo_action) {        
                     
   
   required_packages <- c("lubridate", "dplyr", "stringr")
@@ -21,10 +23,38 @@ getWSE <- function(tickers,
     
     if (!(fin_metr == "p")) {paste(tickers, fin_metr, sep = "_")}
     
-    url1 <- "https://stooq.com/q/d/l/?s="        
-    url2 <- tickers[1]
-    url3 <- "&i=d"
-    url.caly <- paste(url1, url2, url3, sep = "")
+    # change date format to character yyyymmdd
+    from_d <- as.character(from)%>%
+      str_remove_all("-")
+    to_d <- as.character(to)%>%
+      str_remove_all("-")
+    
+    # frequency
+    if(freq == "daily")     fr <- "d"
+    if(freq == "weekly")    fr <- "w"
+    if(freq == "monthly")   fr <- "m"
+    if(freq == "quarterly") fr <- "q"
+    if(freq == "yearly")    fr <- "y"
+    
+    # adjust for some corporate action
+    full_corpo_action <- c("split", "div", "rights", "denomination")
+    
+    spl <- ifelse(any(corpo_action %in% full_corpo_action[1]), 1, 0)
+    div <- ifelse(any(corpo_action %in% full_corpo_action[2]), 1, 0)
+    right <- ifelse(any(corpo_action %in% full_corpo_action[3]), "111", "000")
+    denom <- ifelse(any(corpo_action %in% full_corpo_action[4]), 1, 0)
+    
+    # full corporate actions binary code
+    corpo_adj <- paste(spl, div, right, denom, 0, sep = "")
+    
+    # full url to download data
+    url.caly <- paste("https://stooq.com/q/d/l/?s=", tickers[1],
+                      "&d1=", from_d,
+                      "&d2=", to_d,
+                      "&i=", fr,
+                      "&o=", corpo_adj,
+                      sep = "")
+    
     total <- read.csv(url.caly,
                       header = TRUE,
                       sep = ",",
@@ -33,7 +63,7 @@ getWSE <- function(tickers,
     
     total$Date <- lubridate::ymd(total$Date)    
     
-    # if there is only one ticker to download, then retunred data frame consists of OHLC and vloume also
+    # if there is only one ticker to download, then retunred data frame consists of OHLC and vloume
     if(length(tickers)  > 1){ 
       
       total <- total[, c("Date", ohlcv)]           
@@ -41,16 +71,22 @@ getWSE <- function(tickers,
       
       progress.bar <- winProgressBar(title = "Downloading data, Done in %,
                                  0% Done", 0, 100, 0) 
+      
       for(i in 2:length(tickers)){
-        url1 <- "http://stooq.com/q/d/l/?s="
-        url2 <- tickers[i]
-        url3 <-"&i=d"
-        url.caly <-paste(url1, url2, url3, sep = "") 
+        
+        url.caly <- paste("https://stooq.com/q/d/l/?s=", tickers[i],
+                          "&d1=", from_d,
+                          "&d2=", to_d,
+                          "&i=", fr,
+                          "&o=", corpo_adj,
+                          sep = "")
+        
         stock <- read.csv(url.caly,
                           header = TRUE,
                           sep = ",",
                           dec = ".",
                           stringsAsFactors = F)  
+        
         stock$Date <- lubridate::ymd(stock$Date)                  
         stock <- stock[, c("Date", ohlcv)]         
         colnames(stock) <- c("Date", tickers[i])      
@@ -62,16 +98,15 @@ getWSE <- function(tickers,
                           sprintf("%i%% Done", round(100 * percentage))) 
         
       }
-      close(progress.bar)}
-    
-    total <- dplyr::filter(total, Date >= from & Date <= to)
+      close(progress.bar)
+      }
     
     return(total)
     
   }
   else
     {
-    
+      
     ticker <- tickers[1]      # above matrix consists of choosen stocks to be downloaded
     urlnc2 <- "newconnect"       
     urlgpw2 <- "ciagle"
@@ -194,9 +229,10 @@ getWSE <- function(tickers,
 
 #example:
 
-stock_data <- getWSE(tickers = c("DROP","DEKTRA", "PEKAO", "PKOBP", "GETIN", "DROP", "MOSTALZAB"), 
-                        ohlcv = "Close",
-                       from = "1999-01-01",
-                       to = "2015-01-01",
-                      fin_metr = "pb",
-                       source = "bossa")
+#stock_data <- getWSE(tickers = c("dkr", "ccc", "kgh", "peo"), 
+#                        ohlcv = "Close",
+#                       from = "1999-01-01",
+#                       to = "2015-01-01",
+#                      fin_metr = "p",
+#                       source = "stooq.pl",freq = "quarterly", corpo_action = c("denomination", "div")
+#                        )
