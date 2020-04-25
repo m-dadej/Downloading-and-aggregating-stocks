@@ -1,5 +1,5 @@
 
-######## Downloading every stock from bossa.pl (the best way so far) ###########
+######## Downloading every stock from bossa.pl ###########
 # this script will make a folder in your working directory called "exit_directory" where stock data will be stored
 # first we download a list of tickers from Nc and GPW 
 
@@ -156,3 +156,4 @@ everyWSE <- function(market = "both",
 
 # To check which stocks are not present in bossa.pl file, load whole script without last function rm(...) and run:
 # str_split_fixed(tickery,n = 2, ".mst")[which(!(str_split_fixed(tickery,n = 2, ".mst")[,1] %in% colnames(total))),1]
+

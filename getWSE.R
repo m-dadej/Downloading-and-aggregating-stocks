@@ -3,11 +3,10 @@
 getWSE <- function(tickers, 
                      ohlcv = "Close", 
                      from = "1991-04-16", 
-                     to = Sys.Date(), 
-                     fin_metr = "p",            # in case of source = "stooq.pl" - "p"
+                     to = Sys.Date(),
                      source = "stooq.pl",       # source of the data. "stooq.pl" or "bossa"
                      freq = "daily",
-                     corpo_action) {        
+                     corpo_action = c()) {        
                     
   
   required_packages <- c("lubridate", "dplyr", "stringr")
@@ -21,13 +20,17 @@ getWSE <- function(tickers,
   
   if(source == "stooq.pl"){
     
-    if (!(fin_metr == "p")) {paste(tickers, fin_metr, sep = "_")}
+    # dictionary to translate english ohlcv to pl ohlcv
+    translate_ohlcv <- data.frame(pl_ohlcv = c("Data", "Otwarcie", "Najwyzszy", "Najnizszy", "Zamkniecie", "Wolumen"),
+                                  en_ohlcv = c("Date", "Open", "High", "Low", "Close", "Volume"), stringsAsFactors = FALSE)
+    # trasnalte ohlcv
+    ohlcv <- translate_ohlcv[which(translate_ohlcv$en_ohlcv == ohlcv),1]
     
     # change date format to character yyyymmdd
     from_d <- as.character(from)%>%
-      str_remove_all("-")
+      stringr::str_remove_all("-")
     to_d <- as.character(to)%>%
-      str_remove_all("-")
+      stringr::str_remove_all("-")
     
     # frequency
     if(freq == "daily")     fr <- "d"
@@ -48,7 +51,7 @@ getWSE <- function(tickers,
     corpo_adj <- paste(spl, div, right, denom, 0, sep = "")
     
     # full url to download data
-    url.caly <- paste("https://stooq.com/q/d/l/?s=", tickers[1],
+    url.caly <- paste("https://stooq.pl/q/d/l/?s=", tickers[1],
                       "&d1=", from_d,
                       "&d2=", to_d,
                       "&i=", fr,
@@ -61,20 +64,20 @@ getWSE <- function(tickers,
                       dec = ".",
                       stringsAsFactors = F)
     
-    total$Date <- lubridate::ymd(total$Date)    
+    total$Data <- lubridate::ymd(total$Data)    
     
     # if there is only one ticker to download, then retunred data frame consists of OHLC and vloume
     if(length(tickers)  > 1){ 
       
-      total <- total[, c("Date", ohlcv)]           
-      colnames(total) <- c("Date", tickers[1])   
+      total <- total[, c("Data", ohlcv)]           
+      colnames(total) <- c("Data", tickers[1])   
       
       progress.bar <- winProgressBar(title = "Downloading data, Done in %,
                                  0% Done", 0, 100, 0) 
       
       for(i in 2:length(tickers)){
         
-        url.caly <- paste("https://stooq.com/q/d/l/?s=", tickers[i],
+        url.caly <- paste("https://stooq.pl/q/d/l/?s=", tickers[i],
                           "&d1=", from_d,
                           "&d2=", to_d,
                           "&i=", fr,
@@ -87,11 +90,11 @@ getWSE <- function(tickers,
                           dec = ".",
                           stringsAsFactors = F)  
         
-        stock$Date <- lubridate::ymd(stock$Date)                  
-        stock <- stock[, c("Date", ohlcv)]         
-        colnames(stock) <- c("Date", tickers[i])      
+        stock$Data <- lubridate::ymd(stock$Data)                  
+        stock <- stock[, c("Data", ohlcv)]         
+        colnames(stock) <- c("Data", tickers[i])      
         
-        total <- merge(total,stock,by="Date",all=TRUE)    
+        total <- merge(total,stock,by="Data",all=TRUE)    
         
         percentage <- i / length(tickers)
         setWinProgressBar(progress.bar, percentage, "Downloading stocks - Done in %",
@@ -231,6 +234,5 @@ getWSE <- function(tickers,
 #stock_data <- getWSE(tickers = c("DROP","DEKTRA", "PEKAO", "PKOBP", "GETIN", "DROP", "MOSTALZAB"), 
 #                        ohlcv = "Close",
 #                       from = "1999-01-01",
-#                       to = "2015-01-01",
-#                      fin_metr = "pb",
+#                       to = "2015-01-01"
 #                       source = "bossa")

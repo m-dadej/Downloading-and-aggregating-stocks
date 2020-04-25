@@ -365,12 +365,11 @@ summary {
 </div>
 
 
-<div id="downloading-and-aggregating-stocks-from-warsaw-stock-exchange" class="section level1">
-<h1>Downloading and aggregating stocks from Warsaw Stock Exchange</h1>
+<div id="downloading-and-aggregating-financial-data-from-warsaw-stock-exchange" class="section level1">
+<h1>Downloading and aggregating financial data from Warsaw Stock Exchange</h1>
 <p>Mateusz Dadej</p>
-<p>This repository contains of scripts that allow for user-friendly downloading of historical stock data listed on polish stock market (GPW / WSE). In near future it might be part of library for quantitative finance. Sources of the included functions, as of now, are <a href="https://info.bossa.pl/notowania/metastock/">info.bossa.pl</a>, website of polish brokerage house and <a href="https://stooq.com/">stooq.pl</a>, financial portal. Functions currently allows to download every stock from WSE (as of 18th April 2020, a dataset of 6,816 x 815 dimension, i.e. 814 stocks with prices for 6,816 trading sessions) and some choosen stocks similar to <code>getSymbols()</code> from <a href="https://cran.r-project.org/web/packages/quantmod/quantmod.pdf">quantmod</a> pacakge.</p>
-<p><br />
-</p>
+<p>This repository contains of scripts that allow for user-friendly downloading of historical data of stocks listed on polish stock market (GPW / WSE). In near future it might be part of library for quantitative finance. Sources of the included functions, as of now, are <a href="https://info.bossa.pl/notowania/metastock/">info.bossa.pl</a>, website of polish brokerage house and <a href="https://stooq.com/">stooq.pl</a>, financial portal. Functions currently allows to download every stock from WSE (as of 18th April 2020, a dataset of 6,816 x 815 dimension, i.e. 814 stocks with prices for 6,816 trading sessions), some choosen stock prices similar to <code>getSymbols()</code> from <a href="https://cran.r-project.org/web/packages/quantmod/quantmod.pdf">quantmod</a> package and financial data of those stocks.</p>
+<p>There are following functions:</p>
 <div id="everywse" class="section level4">
 <h4>everyWSE()</h4>
 <p>Returns a <code>data.frame</code> object with downloaded daily prices of every stock listed on Warsaw Stock Exchange from main market or alternative one - newconnect. Data is currently downloaded from info.bossa.pl.</p>
@@ -383,10 +382,14 @@ summary {
 <li><p><code>ohlcv</code> - One of <code>c(&quot;Open&quot;, &quot;High&quot;, &quot;Low&quot;, &quot;Close&quot;, &quot;Volume&quot;)</code>. Specify which part of the daily price or volume to donwload. Default to “Close”</p></li>
 <li><p><code>info</code> - Boolean to choose if additional <code>data.frame</code> object to return. Downloaded data.frame have number of columns equal to the price data, for each stock indicate its IPO date, which market it is listed on and stock ticker. If <code>info = TRUE</code> then returns a <code>list</code> object with 2 data frames described above.</p></li>
 </ul>
-<p>to import this function download it from herein repository or run following script</p>
+<p>to import this function to your environment download it from herein repository or run following script:</p>
 <pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/everyWSE.R&quot;)</code></pre>
-<p><br />
-</p>
+<p>example:</p>
+<pre class="r"><code>df &lt;- everyWSE(market = &quot;both&quot;, ohlcv = &quot;Close&quot;, info = FALSE)
+
+dim(df)
+
+[1] 6821  815</code></pre>
 </div>
 <div id="getwse" class="section level4">
 <h4>getWSE()</h4>
@@ -394,24 +397,97 @@ summary {
 <pre class="r"><code>getWSE(tickers, 
          ohlcv = &quot;Close&quot;, 
          from = &quot;1991-04-16&quot;, 
-         to = Sys.Date(), 
-         fin_metr = &quot;p&quot;,         
+         to = Sys.Date(),         
          source = &quot;stooq.pl&quot;)</code></pre>
 <p>Arguments:</p>
 <ul>
 <li><p><code>tickers</code> - Vector or single character of tickers of desired stock, e.g. <code>c(&quot;ccc&quot;, &quot;pko&quot;, &quot;dkr&quot;)</code>. It is important that format of these tickers is different for every source argument. If source = “stooq.pl”, then the proper way to specify tickers is an actual ticker in lowercase e.g, “cdr” for CD Project Red, “pko” for PKO Bank. If source = “bossa”, then it is necessery to use capital letters with shortened version of name (technically not a ticker). E.g., “CDPROJEKT” for CD Project Red, “PKOBP” for PKO Bank.</p></li>
 <li><p><code>ohlcv</code> - Argument specyfing which part of the session should be returned as values. Available are <code>c(&quot;Open&quot;, &quot;High&quot;, &quot;Low&quot;, &quot;Close&quot;, &quot;Volume&quot;)</code>. It is possible to choose only one.</p></li>
-<li><p><code>from</code> and <code>to</code> - Specify timeframe of retunred data frame. On default, from the beginning of GPW</p></li>
+<li><p><code>from</code> and <code>to</code> - Specify timeframe of retunred data frame. On default, from the beginning of GPW. yyyymmdd format</p></li>
 <li><p><code>source</code> - One of <code>c(&quot;stooq.pl&quot;, &quot;bossa&quot;)</code>. Specify source of data. For less stocks it is faster to use “stooq.pl”</p></li>
 </ul>
 <p>For <code>source = &quot;stooq.pl&quot;</code> there are some additional arguments:</p>
 <ul>
-<li><p><code>fin_metr</code> - Which are respectively, price, market capitalization (in PLN), price to earnings and to book value ratios. One of the following, <code>c(&quot;p&quot;, &quot;mv&quot;, &quot;pb&quot;, &quot;pe&quot;)</code>.</p></li>
 <li><p><code>freq</code> - Specifies frequency of time series. One of the following, <code>c(&quot;daily&quot; &quot;weekly&quot;, &quot;monthly&quot;, &quot;quarterly&quot;, &quot;yearly&quot;)</code>.</p></li>
 <li><p><code>corpo_action</code> - Adjust price to some of the given corporate actions. One of the following, <code>c(&quot;split&quot;, &quot;div&quot;, &quot;rights&quot;, &quot;denomination&quot;)</code>.</p></li>
 </ul>
-<p>To download that function, firt you need to run following script:</p>
+<p>stooq.pl have daily limits of downloading data.</p>
+<p>To import this function to your environment, first you need to run following script:</p>
 <pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getWSE.R&quot;)</code></pre>
+<p>example:</p>
+<pre class="r"><code>stock_data &lt;- getWSE(tickers = c(&quot;dkr&quot;, &quot;ccc&quot;, &quot;peo&quot;), 
+                     ohlcv = &quot;Close&quot;,
+                     from = &quot;2014-01-01&quot;,
+                     to = &quot;2016-01-01&quot;,
+                     fin_metr = &quot;p&quot;,
+                     source = &quot;stooq.pl&quot;,
+                     freq = &quot;monthly&quot;,
+                     corpo_action = c(&quot;div&quot;, &quot;split&quot;)) 
+
+tibble::as_tibble(stock_data)
+
+# A tibble: 24 x 4
+   Date         dkr   ccc   peo
+   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 2014-01-31  7.46  119.  185.
+ 2 2014-02-28  8     132.  193.
+ 3 2014-03-31 10.0   131.  197.
+ 4 2014-04-30  9.76  127.  194.
+ 5 2014-05-31  9.00  120.  186.
+ 6 2014-06-30  8.00  113.  174.
+ 7 2014-07-31  5.80  110.  166.
+ 8 2014-08-31  8.00  119.  180.
+ 9 2014-09-30  7.70  128.  194.
+10 2014-10-31  8.10  129.  176.
+# ... with 14 more rows</code></pre>
+</div>
+<div id="getwse_fin" class="section level4">
+<h4>getWSE_fin()</h4>
+<p>returns a financial data for specified companies listed on WSE main market and New Connect. Currently available variables are price to earnings ratio, price to book value and market capitalization.</p>
+<pre class="r"><code>getWSE_fin(tickers,
+           fin_var,
+           from = &quot;1991-04-16&quot;,
+           to = Sys.Date(),
+           freq)</code></pre>
+<p>Arguments:</p>
+<ul>
+<li><p><code>tickers</code> - Lower case tickers of chosen stocks, e.g. <code>c(&quot;peo&quot;, &quot;dkr&quot;, &quot;ccc&quot;)</code>.</p></li>
+<li><p><code>fin_var</code> - Lower case acronym specifying financial data. One of <code>c(&quot;pe&quot;, &quot;pb&quot;, &quot;mv&quot;)</code>, respectively price to earnings ratio, price to book value ratio and market capitalization.</p></li>
+<li><p><code>from</code> and <code>to</code> - Specify timeframe of retunred data frame. On default, from the beginning of GPW. yyyymmdd format</p></li>
+<li><p><code>freq</code> - Specifies frequency of time series. One of the following, <code>c(&quot;daily&quot; &quot;weekly&quot;, &quot;monthly&quot;, &quot;quarterly&quot;, &quot;yearly&quot;)</code>.</p></li>
+</ul>
+<p>Details:</p>
+<p>financial values from financial statement are the most recently published data at the moment, and is not corresponding to time frame during which it was generated. Values of market capitalization are denominated in million polish zloty (PLN). There is a daily limit of downloads.</p>
+<p>To import function above, first you need to run following script:</p>
+<pre class="r"><code>source(&quot;https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getWSE_fin.R&quot;)</code></pre>
+<p>example:</p>
+<pre class="r"><code>df &lt;- getWSE_fin(tickers = c(&quot;dkr&quot;, &quot;ccc&quot;, &quot;peo&quot;, &quot;clc&quot;),
+                       fin_var = &quot;mv&quot;, 
+                       from = &quot;2015-01-01&quot;,
+                       freq = &quot;daily&quot;)
+                       
+tibble::as_tibble(df)
+                       
+# A tibble: 1,325 x 5
+   Data       dkr_mv ccc_mv peo_mv clc_mv
+   &lt;date&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 2015-01-02   5.32  4820. 33931.   6.35
+ 2 2015-01-05   5.32  4809. 33131.   6.51
+ 3 2015-01-07   5.30  5083. 33416.   6.51
+ 4 2015-01-08   4.89  5398. 34083.   6.35
+ 5 2015-01-09   4.39  5301. 33626.   6.18
+ 6 2015-01-12   4.33  5319. 33340.   6.01
+ 7 2015-01-13   4.27  5192. 34064.   5.01
+ 8 2015-01-14   4.27  5166. 33912.   5.18
+ 9 2015-01-15   4.21  5155. 32978.   5.18
+10 2015-01-16   4.21  5148. 32769.   4.68
+# ... with 1,315 more rows</code></pre>
+</div>
+<div id="general-notes-on-repository" class="section level4">
+<h4>General notes on repository</h4>
+<p>When i find time, i will add another functions to download data as well as for portfolio and risk management. Currently i am working to add profit and book values to <code>getWSE_fin()</code>.</p>
+<p>The future access to info.bossa.pl is uncertain, to say the least. In case of limiting access of its data to customers of bossa brokerage house, the function <code>everyWSE()</code> will be depreciated, as well as one of the source for <code>getWSE()</code>. There are also other very valuable data on info.bossa.pl (e.g financial statement data of every company on WSE/NC), but their future availability is uncertain as well. Thus, if anyone knows other valuable source of data, fell free to message me and i will add it or make another function.</p>
+<p>fell free to contact me: <a href="mailto:mateuszdadej@gmail.com" class="email">mateuszdadej@gmail.com</a> or even on facebook, idc.</p>
 <hr />
 <p>Note, that using data from both of these sources without disclaiming it in final work is illegal.</p>
 </div>
