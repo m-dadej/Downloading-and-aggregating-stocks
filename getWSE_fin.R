@@ -56,7 +56,7 @@ getWSE_fin <- function(tickers,
     progress.bar <- winProgressBar(title = "Downloading data, Done in %,
                                  0% Done", 0, 100, 0) 
     for(i in 2:length(tickers))
-    {
+    try({
       
       url.caly <- paste("https://stooq.pl/q/d/l/?s=", tickers[i],
                         "&d1=", from_d,
@@ -79,7 +79,7 @@ getWSE_fin <- function(tickers,
       percentage <- i / length(tickers)
       setWinProgressBar(progress.bar, percentage, "Downloading stocks - Done in %",
                         sprintf("%i%% Done", round(100 * percentage)))
-    }
+    })
     close(progress.bar)
   }
   return(total)
@@ -90,4 +90,7 @@ getWSE_fin <- function(tickers,
 #                       from = "2015-01-01",
 #                       freq = "daily")
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b5c5961d30666bdf1654db9383d68c748a310ca7
