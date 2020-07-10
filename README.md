@@ -6,39 +6,6 @@ This repository contains of scripts that allow for user-friendly downloading of 
 
 There are following functions:
 
-#### getWSE_every()
-
-Returns a `data.frame` object with downloaded daily prices of every stock listed on Warsaw Stock Exchange from main market or alternative one - newconnect. Data is currently downloaded from info.bossa.pl.
-
-```R
-getWSE_every(market = "both",
-         ohlcv = "Close",
-         info = FALSE)
-```
-Arguments:
-
-* `market` - One of `c("both", "gpw", "nc")`. Specify stocks from which market to download. Default to "both".
-
-* `ohlcv` - One of `c("Open", "High", "Low", "Close", "Volume")`. Specify which part of the daily price or volume to donwload. Default to "Close"
-
-* `info` - Boolean to choose if additional `data.frame` object to return. Downloaded data.frame have number of columns equal to the price data, for each stock indicate its IPO date, which market it is listed on and stock ticker.
-If `info = TRUE` then returns a `list` object with 2 data frames described above.
-
-to import this function to your environment download it from herein repository or run following script:
-
-```R
-source("https://raw.githubusercontent.com/SquintRook/Downloading-and-aggregating-stocks/master/getWSE_every.R")
-```
-example:
-
-```R
-df <- getWSE_every(market = "both", ohlcv = "Close", info = FALSE)
-
-dim(df)
-
-[1] 6821  815
-```
-
 #### getWSE() 
 
 Returns historical data of prices or other financial metrics for a given vector of tickers, from a given timeframe. This function is similar to [quantmod](https://cran.r-project.org/web/packages/quantmod/quantmod.pdf) getSymbol(). 
@@ -160,6 +127,8 @@ tibble::as_tibble(df)
 10 2015-01-16   4.21  5148. 32769.   4.68
 # ... with 1,315 more rows
 ```
+
+
 #### General notes on repository
 
 When i find time, i will add another functions to download data as well as for portfolio and risk management. Currently i am working to add profit and book values to `getWSE_fin()`.

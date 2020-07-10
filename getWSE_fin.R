@@ -85,13 +85,9 @@ getWSE_fin <- function(tickers,
   return(total)
 }
 
-# fin_data <- getWSE_fin(tickers = c("dkr", "ccc", "peo", "gwr"),
+# fin_data <- getWSE_fin(tickers = c("dkr", "ccc", "peo", "clc"),
 #                       fin_var = "mv", 
 #                       from = "2015-01-01",
 #                       freq = "daily")
 
-df <- getWSE_fin(tickers = c("dkr", "ccc", "peo", "clc"),
-                                             fin_var = "mv", 
-                                              from = "2015-01-01",
-                                              freq = "daily")
 
