@@ -42,23 +42,27 @@ getWSE <- function(tickers,
     # adjust for some corporate action
     full_corpo_action <- c("split", "div", "rights", "denomination")
     
-    spl <- ifelse(any(corpo_action %in% full_corpo_action[1]), 1, 0)
-    div <- ifelse(any(corpo_action %in% full_corpo_action[2]), 1, 0)
-    right <- ifelse(any(corpo_action %in% full_corpo_action[3]), "111", "000")
-    denom <- ifelse(any(corpo_action %in% full_corpo_action[4]), 1, 0)
+    spl <- ifelse(any(corpo_action %in% full_corpo_action[1]), 0, 1)
+    div <- ifelse(any(corpo_action %in% full_corpo_action[2]), 0, 1)
+    right <- ifelse(any(corpo_action %in% full_corpo_action[3]), "000", "111")
+    denom <- ifelse(any(corpo_action %in% full_corpo_action[4]), 0, 1)
     
     # full corporate actions binary code
-    corpo_adj <- paste(spl, div, right, denom, 0, sep = "")
+    if("all" %in% corpo_action){
+      corpo_adj <- "0000000"
+    }else{
+      corpo_adj <- paste(spl, div, right, denom, 0, sep = "")
+      }
     
     # full url to download data
-    url.caly <- paste("https://stooq.pl/q/d/l/?s=", tickers[1],
+    url_ <- paste("https://stooq.pl/q/d/l/?s=", tickers[1],
                       "&d1=", from_d,
                       "&d2=", to_d,
                       "&i=", fr,
                       "&o=", corpo_adj,
                       sep = "")
     
-    total <- read.csv(url.caly,
+    total <- read.csv(url_,
                       header = TRUE,
                       sep = ",",
                       dec = ".",
@@ -77,14 +81,14 @@ getWSE <- function(tickers,
       
       for(i in 2:length(tickers)){
         
-        url.caly <- paste("https://stooq.pl/q/d/l/?s=", tickers[i],
+        url_ <- paste("https://stooq.pl/q/d/l/?s=", tickers[i],
                           "&d1=", from_d,
                           "&d2=", to_d,
                           "&i=", fr,
                           "&o=", corpo_adj,
                           sep = "")
         
-        stock <- read.csv(url.caly,
+        stock <- read.csv(url_,
                           header = TRUE,
                           sep = ",",
                           dec = ".",

@@ -4,7 +4,7 @@ getWSE_fin <- function(tickers,
                          fin_var,
                          from = "1991-04-16",
                          to = Sys.Date(),
-                         freq ){
+                         freq = "daily"){
   
   # checking dependencies and loading libraries
   required_packages <- c("lubridate", "dplyr", "stringr")
@@ -12,6 +12,14 @@ getWSE_fin <- function(tickers,
   if(any(!(required_packages %in% installed.packages()[,"Package"]))){ 
     stop(paste("Required packages are not installed on local PC:", 
                required_packages[which(!(required_packages %in% installed.packages()[,"Package"]))]))
+  }
+  
+  '%ni%' <- Negate('%in%')
+  
+  if(fin_var %ni% c("pe", "pb", "mv")) {
+    
+    stop(paste("Incorect 'fin_var' argument (", fin_var, ") choose one of: 'pe', 'pb, 'mv'."))
+    
   }
   
   library(dplyr)
@@ -26,20 +34,20 @@ getWSE_fin <- function(tickers,
   
   # frequency
   if(freq == "daily" | freq == "pub")     fr <- "d"
-  if(freq == "weekly")    fr <- "w"
-  if(freq == "monthly")   fr <- "m"
-  if(freq == "quarterly") fr <- "q"
-  if(freq == "yearly")    fr <- "y"
+  if(freq == "weekly")                    fr <- "w"
+  if(freq == "monthly")                   fr <- "m"
+  if(freq == "quarterly")                 fr <- "q"
+  if(freq == "yearly")                    fr <- "y"
   
   
   # full url to download data
-  url.caly <- paste("https://stooq.pl/q/d/l/?s=", tickers[1],
+  url_ <- paste("https://stooq.pl/q/d/l/?s=", tickers[1],
                     "&d1=", from_d,
                     "&d2=", to_d,
                     "&i=", fr,
                     sep = "")
   
-  total <- read.csv(url.caly,
+  total <- read.csv(url_,
                     header = TRUE,
                     sep = ",",
                     dec = ".",
@@ -49,7 +57,7 @@ getWSE_fin <- function(tickers,
   total <- select(total, Data,  Zamkniecie)
   colnames(total) <- c("Data", tickers[1])
   
-  # if there is only one ticker to download, then retunred data frame consists of OHLC and vloume
+  # if there is only one ticker to download, then retunred data frame consists of OHLC and volume
   if(length(tickers)  > 1)
   { 
     
@@ -58,13 +66,13 @@ getWSE_fin <- function(tickers,
     for(i in 2:length(tickers))
     try({
       
-      url.caly <- paste("https://stooq.pl/q/d/l/?s=", tickers[i],
+      url_ <- paste("https://stooq.pl/q/d/l/?s=", tickers[i],
                         "&d1=", from_d,
                         "&d2=", to_d,
                         "&i=", fr,
                         sep = "")
       
-      stock <- read.csv(url.caly,
+      stock <- read.csv(url_,
                         header = TRUE,
                         sep = ",",
                         dec = ".",
@@ -90,7 +98,3 @@ getWSE_fin <- function(tickers,
 #                       from = "2015-01-01",
 #                       freq = "daily")
 
-<<<<<<< HEAD
-
-=======
->>>>>>> b5c5961d30666bdf1654db9383d68c748a310ca7
