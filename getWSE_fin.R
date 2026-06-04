@@ -4,7 +4,8 @@ getWSE_fin <- function(tickers,
                          fin_var,
                          from = "1991-04-16",
                          to = Sys.Date(),
-                         freq = "daily"){
+                         freq = "daily",
+                         api_key){
   
   # checking dependencies and loading libraries
   required_packages <- c("lubridate", "dplyr", "stringr")
@@ -45,7 +46,8 @@ getWSE_fin <- function(tickers,
                     "&d1=", from_d,
                     "&d2=", to_d,
                     "&i=", fr,
-                    sep = "")
+                    sep = "", 
+                "&apikey=", api_key)
   
   total <- read.csv(url_,
                     header = TRUE,
@@ -70,7 +72,8 @@ getWSE_fin <- function(tickers,
                         "&d1=", from_d,
                         "&d2=", to_d,
                         "&i=", fr,
-                        sep = "")
+                        sep = "", 
+                    "&apikey=", api_key)
       
       stock <- read.csv(url_,
                         header = TRUE,

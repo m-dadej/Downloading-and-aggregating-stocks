@@ -6,7 +6,8 @@ getWSE <- function(tickers,
                      to = Sys.Date(),
                      source = "stooq.pl",       # source of the data. "stooq.pl" or "bossa"
                      freq = "daily",
-                     corpo_action = c()) {        
+                     corpo_action = c(),
+                     api_key) {        
                     
   
   required_packages <- c("lubridate", "dplyr", "stringr")
@@ -60,7 +61,8 @@ getWSE <- function(tickers,
                       "&d2=", to_d,
                       "&i=", fr,
                       "&o=", corpo_adj,
-                      sep = "")
+                      sep = "", 
+                      "&apikey=", api_key)
     
     total <- read.csv(url_,
                       header = TRUE,
@@ -86,7 +88,8 @@ getWSE <- function(tickers,
                           "&d2=", to_d,
                           "&i=", fr,
                           "&o=", corpo_adj,
-                          sep = "")
+                          sep = "",
+                          "&apikey=", api_key)
         
         stock <- read.csv(url_,
                           header = TRUE,
